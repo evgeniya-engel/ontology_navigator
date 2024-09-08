@@ -15,11 +15,11 @@ if 'global_library' not in st.session_state:
     st.session_state['global_library'] = None
 
 if 'openai_api_key' not in st.session_state:
-    st.session_state['openai_api_key'] = 'sk-proj-Ft0HTiQfOjRLttAf3ja6T3BlbkFJHqW8ewJs0u6ZaqvFZqSY'
+    st.session_state['openai_api_key'] = ''
 
 if 'pinecone_index' not in st.session_state:
     # Set up Pinecone
-    pc = Pinecone(api_key='53a9e158-fe0a-4f10-813b-fd7e8485927d')
+    pc = Pinecone(api_key='')
     # Create or connect to Pinecone Index
     index_name = "dbo-ontology-index"
     if index_name not in pc.list_indexes().names():
