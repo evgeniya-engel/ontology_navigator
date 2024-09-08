@@ -1,28 +1,30 @@
-import ruamel.yaml as yaml
+import ruamel.yaml
 import openai
 import random
 import os
 import re
 
-def build_ontology_library(ontology_path: str):
-    ontology_path = os.path.join(ontology_path + r"\ontology\yaml\resources\HVAC\entity_types")
-    hvac_yamls = os.listdir(ontology_path)
-    global_lib = {}
-    for yml in hvac_yamls:
-        path = os.path.join(ontology_path, yml)
-        type = yml.replace('.yaml', '')
-        with open(path, 'r') as file:
-            doc = yaml.load(file, Loader=yaml.RoundTripLoader)
-            file.close()
-        type_lib = {}
-        for key, val in doc.items():
-            if not isinstance(val, str):
-                if type == 'ABSTRACT':
-                    type_lib[key] = {'description': val.get('description')}
-                else:
-                    type_lib[key] = {'description': val.get('description'),
-                                    'implements': val.get('implements')}
-        global_lib[type] = type_lib
+def build_ontology_library(ontology_path=None):
+    if ontology_path:
+        ontology_path = os.path.join(ontology_path + r"\ontology\yaml\resources\HVAC\entity_types")
+        hvac_yamls = os.listdir(ontology_path)
+        global_lib = {}
+        for yml in hvac_yamls:
+            path = os.path.join(ontology_path, yml)
+            type = yml.replace('.yaml', '')
+            with open(path, 'r') as file:
+                yaml = ruamel.yaml.YAML(typ='rt')
+                doc = yaml.load(file)
+                file.close()
+            type_lib = {}
+            for key, val in doc.items():
+                if not isinstance(val, str):
+                    if type == 'ABSTRACT':
+                        type_lib[key] = {'description': val.get('description')}
+                    else:
+                        type_lib[key] = {'description': val.get('description'),
+                                        'implements': val.get('implements')}
+            global_lib[type] = type_lib
     return global_lib
 
 def get_implements(input: str):
@@ -32,7 +34,6 @@ def get_implements(input: str):
     implements = re.split("[,_]", input)
     implements = [i.strip() for i in implements]
     return implements
-    
     
 def get_descriptions(implements: list, global_library: dict):
     '''

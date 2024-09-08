@@ -2,3 +2,6 @@ streamlit
 pandas
 ruamel.yaml
 openai
+pinecone
+llama-index
+llama-index-readers-json
